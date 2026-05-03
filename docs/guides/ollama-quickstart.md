@@ -124,7 +124,7 @@ python -m orchestra.cli --mode api
 
 In `api` mode, the current defaults are:
 
-- Designer -> `anthropic / claude-sonnet-4`
+- Designer -> `anthropic / claude-sonnet-4.6`
 - Reviewer -> `google / gemini-3.1-pro`
 - CEO -> `anthropic / claude-opus-4.7`
 - Spec Writer -> `openai / gpt-5.4-mini`

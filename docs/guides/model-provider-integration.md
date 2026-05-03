@@ -86,7 +86,7 @@ Every role defaults to provider `ollama`, with model defaults currently set to:
 
 The current repository uses a mixed-provider default:
 
-- Designer -> `anthropic / claude-sonnet-4`
+- Designer -> `anthropic / claude-sonnet-4.6`
 - Reviewer -> `google / gemini-3.1-pro`
 - CEO -> `anthropic / claude-opus-4.7`
 - Spec Writer -> `openai / gpt-5.4-mini`

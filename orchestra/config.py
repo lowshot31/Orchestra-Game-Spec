@@ -27,10 +27,10 @@ def _defaults_for_mode(mode: str) -> tuple[tuple[str, str, str, str, str], ...]:
         )
     if mode == "api":
         return (
-            ("creative_designer", "game_designer", "DESIGNER", "openai", "gpt-4o"),
-            ("technical_reviewer", "technical_reviewer", "REVIEWER", "google", "gemini-1.5-pro"),
-            ("product_ceo", "product_ceo", "CEO", "openai", "gpt-4o-mini"),
-            ("spec_writer", "spec_writer", "SPEC_WRITER", "openai", "gpt-4o-mini"),
+            ("creative_designer", "game_designer", "DESIGNER", "anthropic", "claude-sonnet-4.6"),
+            ("technical_reviewer", "technical_reviewer", "REVIEWER", "google", "gemini-3.1-pro"),
+            ("product_ceo", "product_ceo", "CEO", "anthropic", "claude-opus-4.7"),
+            ("spec_writer", "spec_writer", "SPEC_WRITER", "openai", "gpt-5.4-mini"),
         )
     return (
         ("creative_designer", "game_designer", "DESIGNER", "mock", "designer"),
