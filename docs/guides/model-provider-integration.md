@@ -77,19 +77,19 @@ Every role uses the `MockAgentAdapter`.
 
 Every role defaults to provider `ollama`, with model defaults currently set to:
 
-- Designer -> `llama3.1:8b`
-- Reviewer -> `qwen2.5-coder:7b`
+- Designer -> `qwen2.5-coder:7b-instruct`
+- Reviewer -> `qwen2.5-coder:7b-instruct`
 - CEO -> `qwen3:8b`
-- Spec Writer -> `mistral:7b`
+- Spec Writer -> `qwen2.5-coder:7b-instruct`
 
 ### `api`
 
 The current repository uses a mixed-provider default:
 
-- Designer -> `openai / gpt-4o`
-- Reviewer -> `google / gemini-1.5-pro`
-- CEO -> `openai / gpt-4o-mini`
-- Spec Writer -> `openai / gpt-4o-mini`
+- Designer -> `anthropic / claude-sonnet-4`
+- Reviewer -> `google / gemini-3.1-pro`
+- CEO -> `anthropic / claude-opus-4.7`
+- Spec Writer -> `openai / gpt-5.5`
 
 Important:
 
@@ -111,10 +111,10 @@ Supported prefixes:
 
 Examples:
 
-- `DESIGNER_PROVIDER=openai`
-- `DESIGNER_MODEL=gpt-4o`
+- `DESIGNER_PROVIDER=anthropic`
+- `DESIGNER_MODEL=claude-opus-4.7`
 - `REVIEWER_PROVIDER=google`
-- `REVIEWER_MODEL=gemini-1.5-pro`
+- `REVIEWER_MODEL=gemini-3.1-pro`
 
 This means you can:
 
@@ -131,6 +131,7 @@ Current supported providers:
 - `mock`
 - `ollama`
 - `openai`
+- `anthropic`
 - `google`
 
 Mappings:
@@ -138,6 +139,7 @@ Mappings:
 - `mock` -> `MockAgentAdapter`
 - `ollama` -> `OllamaAgentAdapter`
 - `openai` -> `OpenAIAgentAdapter`
+- `anthropic` -> `AnthropicAgentAdapter`
 - `google` -> `GoogleAgentAdapter`
 
 ## Provider Implementation Notes

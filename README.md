@@ -154,7 +154,7 @@ python -m orchestra.cli --mode ollama
 - **Language:** Python 3.11+
 - **Agent Orchestration:** 자체 구현 Workflow Engine (의존성 최소화)
 - **Interface:** `discord.py` 2.3+ (Bot), `argparse` (CLI)
-- **LLM Support:** Mock (내장), Ollama (Local), OpenAI/Google Gemini (Cloud)
+- **LLM Support:** Mock (내장), Ollama (Local), OpenAI / Anthropic / Google Gemini (Cloud)
 - **CI/CD Mocking:** GitHub REST API (stdlib `urllib` 사용, 외부 라이브러리 Zero)
 
 ---

@@ -25,11 +25,11 @@ No new integration code is required for a basic real-model run.
 
 ## Mode Summary
 
-| Mode | Value | Main use |
-| :--- | :--- | :--- |
-| Mock | `mock` | Demo path without external dependencies |
-| Ollama | `ollama` | Local model execution through Ollama |
-| API | `api` | External model execution through OpenAI and Google |
+| Mode   | Value    | Main use                                           |
+| :----- | :------- | :------------------------------------------------- |
+| Mock   | `mock`   | Demo path without external dependencies            |
+| Ollama | `ollama` | Local model execution through Ollama               |
+| API    | `api`    | External model execution through OpenAI and Google |
 
 ## Before You Start
 
@@ -66,10 +66,8 @@ If this command fails, start Ollama first.
 Example:
 
 ```powershell
-ollama pull llama3.1:8b
-ollama pull qwen2.5-coder:7b
+ollama pull qwen2.5-coder:7b-instruct
 ollama pull qwen3:8b
-ollama pull mistral:7b
 ```
 
 These names match the current defaults in `orchestra/config.py`.
@@ -78,10 +76,10 @@ These names match the current defaults in `orchestra/config.py`.
 
 ```powershell
 $env:AGENT_MODE="ollama"
-$env:DESIGNER_MODEL="llama3.1:8b"
-$env:REVIEWER_MODEL="qwen2.5-coder:7b"
+$env:DESIGNER_MODEL="qwen2.5-coder:7b-instruct"
+$env:REVIEWER_MODEL="qwen2.5-coder:7b-instruct"
 $env:CEO_MODEL="qwen3:8b"
-$env:SPEC_WRITER_MODEL="mistral:7b"
+$env:SPEC_WRITER_MODEL="qwen2.5-coder:7b-instruct"
 python -m orchestra.cli --mode ollama
 ```
 
@@ -126,10 +124,10 @@ python -m orchestra.cli --mode api
 
 In `api` mode, the current defaults are:
 
-- Designer -> `openai / gpt-4o`
-- Reviewer -> `google / gemini-1.5-pro`
-- CEO -> `openai / gpt-4o-mini`
-- Spec Writer -> `openai / gpt-4o-mini`
+- Designer -> `anthropic / claude-sonnet-4`
+- Reviewer -> `google / gemini-3.1-pro`
+- CEO -> `anthropic / claude-opus-4.7`
+- Spec Writer -> `openai / gpt-5.5`
 
 This is defined in `orchestra/config.py`.
 
@@ -143,13 +141,13 @@ You can override provider and model per role without changing code.
 $env:AGENT_MODE="api"
 $env:OPENAI_API_KEY="your-openai-api-key"
 $env:DESIGNER_PROVIDER="openai"
-$env:DESIGNER_MODEL="gpt-4o"
+$env:DESIGNER_MODEL="gpt-5.5"
 $env:REVIEWER_PROVIDER="openai"
-$env:REVIEWER_MODEL="gpt-4o-mini"
+$env:REVIEWER_MODEL="gpt-5.4"
 $env:CEO_PROVIDER="openai"
-$env:CEO_MODEL="gpt-4o-mini"
+$env:CEO_MODEL="gpt-5.4"
 $env:SPEC_WRITER_PROVIDER="openai"
-$env:SPEC_WRITER_MODEL="gpt-4o-mini"
+$env:SPEC_WRITER_MODEL="gpt-5.4"
 python -m orchestra.cli --mode api
 ```
 
@@ -165,14 +163,15 @@ Note:
 $env:AGENT_MODE="api"
 $env:OPENAI_API_KEY="your-openai-api-key"
 $env:GOOGLE_API_KEY="your-google-api-key"
-$env:DESIGNER_PROVIDER="ollama"
-$env:DESIGNER_MODEL="llama3.1:8b"
+$env:ANTHROPIC_API_KEY="your-anthropic-api-key"
+$env:DESIGNER_PROVIDER="anthropic"
+$env:DESIGNER_MODEL="claude-opus-4.7"
 $env:REVIEWER_PROVIDER="google"
-$env:REVIEWER_MODEL="gemini-1.5-pro"
+$env:REVIEWER_MODEL="gemini-3.1-pro"
 $env:CEO_PROVIDER="openai"
-$env:CEO_MODEL="gpt-4o-mini"
+$env:CEO_MODEL="gpt-5.4"
 $env:SPEC_WRITER_PROVIDER="openai"
-$env:SPEC_WRITER_MODEL="gpt-4o-mini"
+$env:SPEC_WRITER_MODEL="gpt-5.4"
 python -m orchestra.cli --mode api
 ```
 
