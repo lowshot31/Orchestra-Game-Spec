@@ -126,7 +126,10 @@ class TestMockPipeline:
         assert result.final_spec_path.exists()
         assert result.schema_path.exists()
         assert result.progress_path.exists()
-        assert len(result.messages) >= 5  # user, draft, review, ceo, revision, spec
+        assert len(result.messages) >= 6  # user, draft, review, rebuttal, ceo, revision, spec
+        # 에이전트 간 토론(rebuttal)이 포함되어야 함
+        types = [m.type for m in result.messages]
+        assert "rebuttal" in types
 
     def test_pipeline_with_intervention(self, tmp_path):
         """인간 개입(intervention)이 파이프라인에 반영되는지 검증."""

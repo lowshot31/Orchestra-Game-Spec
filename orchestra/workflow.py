@@ -96,7 +96,23 @@ def run_design_review(
             content=review,
         )
     )
-    ceo_context = "\n\n".join([draft, review])
+
+    # --- Negotiation: Designer responds to Reviewer's critique ---
+    rebuttal_context = "\n\n".join([draft, review])
+    rebuttal = designer.generate("rebuttal", idea, context=rebuttal_context)
+    messages.append(
+        _message(
+            index=len(messages) + 1,
+            round_number=1,
+            sender="creative_designer",
+            receiver="technical_reviewer",
+            message_type="rebuttal",
+            config=agents["creative_designer"],
+            content=rebuttal,
+        )
+    )
+
+    ceo_context = "\n\n".join([draft, review, rebuttal])
     ceo_review = ceo.generate("ceo_review", idea, context=ceo_context)
     messages.append(
         _message(
