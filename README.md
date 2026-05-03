@@ -40,7 +40,8 @@ graph TD
     classDef decision fill:#fff3e0,stroke:#ff9800,stroke-width:2px,color:#000;
     classDef system fill:#e8f5e9,stroke:#4caf50,stroke-width:2px,color:#000;
 
-    User((👤 사용자)):::user -->|"1. 아이디어 입력 (/tutti start)"| Designer
+    User((👤 사용자)):::user -->|"1. 신규 기획 (/tutti start)"| Designer
+    User -->|"2. 기존 기획 수정 (/tutti revise)"| Designer
     
     subgraph Agent Collaboration
         Designer[🎨 Creative Designer 초안 작성]:::agent --> Reviewer[🛠️ Technical Reviewer 기술 검토]:::agent
