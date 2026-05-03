@@ -189,13 +189,12 @@ python -m orchestra.discord_bot
 
 주요 환경 변수:
 
+- `DISCORD_BOT_TOKEN`: Discord 봇 실행 시 필수
 - `AGENT_MODE`: `mock`, `ollama`, `api` 중 하나. 기본값은 `mock`
 - `OLLAMA_BASE_URL`: Ollama 서버 주소. 기본값은 `http://localhost:11434`
-- `DESIGNER_MODEL`: Designer 역할에 사용할 모델명
-- `REVIEWER_MODEL`: Reviewer 역할에 사용할 모델명
-- `SPEC_WRITER_MODEL`: Spec Writer 역할에 사용할 모델명
-- `OPENAI_API_KEY`: OpenAI 모델 사용 시 필요
-- `GOOGLE_API_KEY`: Gemini 모델 사용 시 필요
+- `DESIGNER_MODEL` / `REVIEWER_MODEL` / `SPEC_WRITER_MODEL`: 역할별 사용할 모델명
+- `OPENAI_API_KEY` / `GOOGLE_API_KEY`: 외부 API 모델 사용 시 필요
+- `GITHUB_GAME_REPO` / `GITHUB_TOKEN`: GitHub PR 자동 생성 시 필요
 
 `mock` 모드에서는 정해진 규칙 기반 응답 템플릿을 사용하여 Designer와 Reviewer가 메시지를 교환합니다. 이를 통해 평가자는 별도 API 키나 Ollama 설치 없이도 협업 흐름, 사용자 개입, 최종 산출물 생성을 확인할 수 있습니다.
 
