@@ -14,8 +14,8 @@ Orchestra는 두 층의 멀티에이전트 활용을 보여준다.
 원본 근거는 Codex 로컬 세션 로그다.
 
 ```text
-C:\Users\cisor\.codex\sessions
-C:\Users\cisor\.codex\session_index.jsonl
+%USERPROFILE%\.codex\sessions
+%USERPROFILE%\.codex\session_index.jsonl
 ```
 
 ## 평가자가 보면 좋은 포인트

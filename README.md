@@ -40,13 +40,56 @@
 
 ### 1. 설치
 
+**Python 3.11 이상이 필요합니다.**
+
 ```bash
 git clone https://github.com/lowshot31/Orchestra-Game-Spec.git
 cd Orchestra-Game-Spec
+```
+
+**가상환경 생성 및 활성화:**
+
+```bash
+# Windows (PowerShell)
+py -3 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+
+# macOS / Linux
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+**의존성 설치:**
+
+```bash
 pip install -r requirements.txt
 ```
 
-### 2. CLI 데모 (가장 빠름 — 설정 불필요)
+### 2. 환경 변수 설정
+
+```bash
+cp .env.example .env   # Windows: Copy-Item .env.example .env
+```
+
+`.env` 파일을 열어 필요한 값을 입력합니다:
+
+| 변수 | 필수 | 설명 |
+|:---|:---:|:---|
+| `DISCORD_BOT_TOKEN` | Discord 봇 전용 | Discord Developer Portal에서 발급 |
+| `AGENT_MODE` | ✅ | `mock` / `ollama` / `api` |
+| `OLLAMA_BASE_URL` | Ollama 전용 | 기본값: `http://localhost:11434` |
+| `DESIGNER_MODEL` | 선택 | Ollama 모델명 (예: `qwen2.5-coder:7b-instruct`) |
+| `REVIEWER_MODEL` | 선택 | Ollama 모델명 |
+| `CEO_MODEL` | 선택 | Ollama 모델명 (예: `qwen3:8b`) |
+| `SPEC_WRITER_MODEL` | 선택 | Ollama 모델명 |
+| `OPENAI_API_KEY` | API 모드 전용 | `sk-...` |
+| `GOOGLE_API_KEY` | API 모드 전용 | `AIza...` |
+| `GITHUB_GAME_REPO` | GitHub PR 전용 | `owner/repo-name` |
+| `GITHUB_TOKEN` | GitHub PR 전용 | `ghp_...` (repo 권한 필요) |
+
+> CLI 데모(`AGENT_MODE=mock`)는 `DISCORD_BOT_TOKEN` 없이도 실행됩니다.
+
+### 3. CLI 데모 (가장 빠름 — 설정 불필요)
 
 ```bash
 python -m orchestra.cli
