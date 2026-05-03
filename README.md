@@ -45,7 +45,8 @@ graph TD
     
     subgraph Agent Collaboration
         Designer[🎨 Creative Designer 초안 작성]:::agent --> Reviewer[🛠️ Technical Reviewer 기술 검토]:::agent
-        Reviewer --> CEO[💼 Product CEO Risk 판단]:::agent
+        Reviewer --> |"비판"| Rebuttal[🎨 Designer 반론/절충안]:::agent
+        Rebuttal --> CEO[💼 Product CEO Risk 판단]:::agent
     end
     
     CEO --> Risk{⚡ Risk Level?}:::decision

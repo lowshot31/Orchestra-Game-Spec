@@ -74,7 +74,8 @@ orchestra/
 graph TD
     A["👤 /tutti start"] --> B["🎨 Designer: 1차 기획안"]
     B --> C["🛠️ Reviewer: 기술 검토"]
-    C --> D["💼 CEO: 시장성 평가 + Risk 판단"]
+    C --> |"비판"| C2["🎨 Designer: 반론/절충안"]
+    C2 --> D["💼 CEO: 시장성 평가 + Risk 판단"]
     D --> E{"⚡ Risk Level?"}
     E -->|LOW| F["자동 승인"]
     E -->|MEDIUM| G["15초 대기 후 자동"]
