@@ -1,314 +1,170 @@
-# Orchestra (Tutti) — Multi-Agent Game Design Toolkit
+<div align="center">
 
-> 여러 AI 에이전트가 **메시지를 주고받으며** 게임을 기획하고, 사용자가 실시간으로 **개입(Human-in-the-loop)**하거나 **관찰**할 수 있는 멀티 에이전트 협업 도구입니다.
-> 기획 완료 시 **GitHub PR로 개발팀에 자동 핸드오프**합니다.
+# 🎮 Orchestra (Tutti)
+**Multi-Agent Game Design Studio with Human-in-the-Loop**
+
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Agent Mode](https://img.shields.io/badge/Mode-Mock%20%7C%20Ollama%20%7C%20API-success.svg)](#)
+[![Discord Bot](https://img.shields.io/badge/Discord-Tutti_Bot-5865F2?logo=discord&logoColor=white)](#)
+
+> **"아이디어 하나가 2분 만에 기획서, 플레이 가능한 프로토타입, 그리고 GitHub PR로 변환됩니다."**  
+> 4명의 AI 에이전트가 협업하고, 사람이 실시간으로 지휘(Orchestrate)하는 차세대 게임 기획 프레임워크.
+
+[제출 안내(SUBMISSION)](SUBMISSION.md) · [CLI 가이드](Tutti_CLI_Guide.md) · [Discord 가이드](Tutti_Discord_Guide.md) · [설계 문서(DESIGN)](DESIGN.md)
+
+</div>
 
 ---
 
-## 빠른 확인
+## ✨ 왜 Orchestra인가요? (Key Features)
 
-| 항목                                 | 위치                                                                               |
-| :----------------------------------- | :--------------------------------------------------------------------------------- |
-| GitHub repo                          | https://github.com/lowshot31/Orchestra-Game-Spec                                   |
-| 제출 안내                            | [SUBMISSION.md](SUBMISSION.md)                                                     |
-| 에이전트 스킬/서브에이전트 사용 내역 | [docs/design/skill-and-subagent-usage.md](docs/design/skill-and-subagent-usage.md) |
-| Discord 사용 설명서                  | [Tutti_Discord_Guide.md](Tutti_Discord_Guide.md)                                   |
-| CLI 사용 설명서                      | [Tutti_CLI_Guide.md](Tutti_CLI_Guide.md)                                           |
+- 🤖 **다중 역할 에이전트 (Multi-Agent System)**
+  - `Creative Designer`, `Technical Reviewer`, `Product CEO`, `Spec Writer`가 각자의 역할과 컨텍스트를 가지고 상호 검토하며 기획안을 고도화합니다.
+- 🛑 **완벽한 통제권, Human-in-the-loop (HitL)**
+  - AI가 통제 불능 상태로 폭주하지 않습니다. 리스크(Risk)에 따라 파이프라인이 일시 정지되며, 인간(사용자)이 실시간으로 피드백을 주입해 방향을 틉니다.
+- 🚀 **End-to-End 자동화 (Idea to PR)**
+  - 기획이 승인되면 즉시 Markdown 명세, JSON 스키마, 그리고 **플레이 가능한 HTML/JS 프로토타입**을 생성하여 브랜치를 따고 **GitHub PR까지 자동 생성**합니다.
+- 🔌 **Plug & Play 모델 (Provider Agnostic)**
+  - API 키 없이 즉시 실행 가능한 `Mock` 모드부터, 완전 오프라인 로컬 LLM인 `Ollama`, 그리고 `OpenAI/Gemini` 클라우드 모델까지 자유롭게 스위칭 가능합니다.
 
 ---
 
-## 에이전트 파이프라인
+## 🏗️ 시스템 파이프라인 (Architecture)
 
+```mermaid
+graph TD
+    %% Styling
+    classDef user fill:#f9f,stroke:#333,stroke-width:2px,color:#000;
+    classDef agent fill:#e1f5fe,stroke:#03a9f4,stroke-width:2px,color:#000;
+    classDef decision fill:#fff3e0,stroke:#ff9800,stroke-width:2px,color:#000;
+    classDef system fill:#e8f5e9,stroke:#4caf50,stroke-width:2px,color:#000;
+
+    User((👤 사용자)):::user -->|1. 아이디어 입력\n/tutti start| Designer
+    
+    subgraph Agent Collaboration
+        Designer[🎨 Creative Designer\n기획 초안 작성]:::agent --> Reviewer[🛠️ Technical Reviewer\n기술/구현 리스크 검토]:::agent
+        Reviewer --> CEO[💼 Product CEO\n시장성 평가 및 Risk 판단]:::agent
+    end
+    
+    CEO --> Risk{⚡ Risk Level?}:::decision
+    
+    Risk -->|LOW| Auto[✅ 자동 승인]:::system
+    Risk -->|MEDIUM| Wait[⏳ 15초 대기 후 진행]:::system
+    Risk -->|HIGH| HitL[🛑 인간 개입 대기]:::user
+    
+    HitL -->|수정 지시| Designer
+    Wait -->|수정 지시 (옵션)| Designer
+    
+    Auto --> Writer
+    Wait -.->|시간 초과| Writer
+    HitL -.->|승인 버튼| Writer
+    
+    subgraph Automated Handoff
+        Writer[✍️ Spec Writer\n최종 명세/스키마 도출]:::agent --> Prototype[🎮 Prototype Generator\nHTML/JS 게임 생성]:::system
+        Prototype --> Github[🔗 GitHub PR\n브랜치 + 커밋 + PR 생성]:::system
+    end
 ```
-[사용자] ──아이디어──▶ [Designer] ──초안──▶ [Reviewer]
-                                              │
-                          ◀──리뷰 피드백──────┘
-                              │
-                     [CEO] ──전략 리뷰 + Risk 판단
-                              │
-                     ┌────────┼────────┐
-                   LOW     MEDIUM     HIGH
-                (자동승인) (15초대기) (버튼 대기)
-                     └────────┼────────┘
-                              │
-                  [사용자 개입] ──수정 지시──▶ [Designer]
-                              │
-                     [Spec Writer] ──최종 명세
-                              │
-                     [Prototype Generator] ──HTML/JS 게임
-                              │
-                     [GitHub PR] ──브랜치 + 커밋 + PR 자동 생성
-```
-
-**4명의 AI 에이전트:**
-
-- 🎨 **Creative Designer** — 게임 컨셉 초안 작성
-- 🛠️ **Technical Reviewer** — 기술 검토 및 범위 조정
-- 💼 **Product CEO** — 시장 관점 리뷰, 위험도(Risk) 평가
-- ✍️ **Spec Writer** — 최종 명세서 작성
 
 ---
 
-## 빠른 시작 (Quick Start)
+## 🚀 빠른 시작 (Quick Start)
 
 ### 1. 설치
 
-**Python 3.11 이상이 필요합니다.**
+Python 3.11 이상이 필요합니다.
 
 ```bash
 git clone https://github.com/lowshot31/Orchestra-Game-Spec.git
 cd Orchestra-Game-Spec
-```
 
-**가상환경 생성 및 활성화:**
-
-```bash
-# Windows (PowerShell)
+# 가상환경 생성 및 활성화 (Windows)
 py -3 -m venv .venv
 .\.venv\Scripts\Activate.ps1
 
 # macOS / Linux
-python3 -m venv .venv
-source .venv/bin/activate
-```
+# python3 -m venv .venv && source .venv/bin/activate
 
-**의존성 설치:**
-
-```bash
+# 의존성 설치
 pip install -r requirements.txt
 ```
 
-### 2. 환경 변수 설정
-
-```bash
-cp .env.example .env   # Windows: Copy-Item .env.example .env
-```
-
-`.env` 파일을 열어 필요한 값을 입력합니다:
-
-| 변수                |      필수       | 설명                                            |
-| :------------------ | :-------------: | :---------------------------------------------- |
-| `DISCORD_BOT_TOKEN` | Discord 봇 전용 | Discord Developer Portal에서 발급               |
-| `AGENT_MODE`        |       ✅        | `mock` / `ollama` / `api`                       |
-| `OLLAMA_BASE_URL`   |   Ollama 전용   | 기본값: `http://localhost:11434`                |
-| `DESIGNER_MODEL`    |      선택       | Ollama 모델명 (예: `qwen2.5-coder:7b-instruct`) |
-| `REVIEWER_MODEL`    |      선택       | Ollama 모델명                                   |
-| `CEO_MODEL`         |      선택       | Ollama 모델명 (예: `qwen3:8b`)                  |
-| `SPEC_WRITER_MODEL` |      선택       | Ollama 모델명                                   |
-| `OPENAI_API_KEY`    |  API 모드 전용  | `sk-...`                                        |
-| `GOOGLE_API_KEY`    |  API 모드 전용  | `AIza...`                                       |
-| `GITHUB_GAME_REPO`  | GitHub PR 전용  | `owner/repo-name`                               |
-| `GITHUB_TOKEN`      | GitHub PR 전용  | `ghp_...` (repo 권한 필요)                      |
-
-> CLI 데모(`AGENT_MODE=mock`)는 `DISCORD_BOT_TOKEN` 없이도 실행됩니다.
-
-### 3. CLI 데모 (가장 빠름 — 설정 불필요)
-
-```bash
-python -m orchestra.cli
-```
-
-mock 모드로 즉시 실행됩니다. 4명의 에이전트가 메시지를 교환하는 과정을 터미널에서 확인할 수 있습니다.
-
-💡 **개입 테스트 (Human-in-the-loop):**
-명령어를 실행하면 1차 기획이 끝난 후 터미널이 잠시 멈춥니다.
-이때 `> 장애물을 소행성 말고 외계인으로 바꿔줘` 처럼 텍스트를 치면 디스코드처럼 에이전트가 이를 반영(Revise)하여 2차 기획안을 만듭니다. (그냥 `Enter`를 치면 자동 승인됩니다.)
-
-**옵션:**
-
-```bash
-# 아이디어 지정
-python -m orchestra.cli --idea "한 손으로 플레이하는 1분 리듬 게임"
-
-# 사용자 개입 포함
-python -m orchestra.cli --idea "병합 퍼즐 게임" --intervention "라이브옵스 요소는 제외"
-
-# 프리셋 변경 (fast_draft, balanced, deep_review)
-python -m orchestra.cli --preset deep_review
-
-# 저장 폴더 이름 지정
-python -m orchestra.cli --idea "우주 공룡 게임" --run-name space-dino
-
-# GitHub PR 연동 (기획 완료 시 자동으로 PR 생성)
-python -m orchestra.cli --idea "우주 공룡 게임" \
-  --github-repo "owner/repo-name" \
-  --github-token "ghp_..."
-```
-
-실행 결과:
-
-- `artifacts/cli/playable/<run-name>/round_1_design.md` — 1차 기획안
-- `artifacts/cli/playable/<run-name>/round_2_revision.md` — 수정 기획안
-- `artifacts/cli/playable/<run-name>/final_game_spec.md` — 최종 명세서
-- `artifacts/cli/playable/<run-name>/game_schema.json` — 구조화 명세
-- `artifacts/cli/playable/<run-name>/message_log.json` — 에이전트 메시지 로그
-- `artifacts/cli/playable/<run-name>/run_progress.json` — 진행 상태
-- `artifacts/cli/playable/<run-name>/game/index.html` — 브라우저에서 플레이 가능한 프로토타입
-
-### 3. Discord 봇 (Tutti) — 추천!
-
-디스코드 서버에서 비개발 직군(기획자, PM)도 함께 사용할 수 있습니다.
+### 2. 환경변수 설정
 
 ```bash
 cp .env.example .env
-# .env 파일을 열어 DISCORD_BOT_TOKEN을 설정하세요
-python -m orchestra.discord_bot
 ```
+> **Tip:** API 키나 복잡한 설정 없이도 기본 `mock` 모드로 즉시 데모 실행이 가능합니다.
 
-**슬래시 커맨드:**
+### 3. 가장 빠른 데모 실행 (CLI)
 
-| 명령어                           | 설명                            |
-| :------------------------------- | :------------------------------ |
-| `/tutti start name:... idea:...` | 게임 기획 run 시작              |
-| `/tutti revise "지시사항"`       | 마지막 run 수정                 |
-| `/tutti status`                  | 현재 상태 확인                  |
-| `/tutti settings`                | 에이전트/서버/GitHub 설정       |
-| `/tutti apikey`                  | API 키 및 GitHub 토큰 설정 (DM) |
-| `/tutti github`                  | GitHub PR 연동 설정 가이드      |
-| `/tutti learn "규칙"`            | 에이전트에게 규칙 학습          |
-| `/tutti rules`                   | 학습된 규칙 목록                |
-| `/tutti forget`                  | 학습된 규칙 삭제                |
-| `/tutti help`                    | 도움말                          |
-| `/tutti menu`                    | 온보딩 메뉴 패널                |
-
-**쓰레드 대화:** 생성된 `run-*` 쓰레드에서 `@디자이너`, `@리뷰어`, `@ceo`, `@라이터`로 에이전트를 호출하여 브레인스토밍할 수 있습니다.
-
-> 📖 상세 사용법: [Tutti_Discord_Guide.md](Tutti_Discord_Guide.md)
+```bash
+python -m orchestra.cli --idea "한 손으로 플레이하는 1분 리듬 게임"
+```
+터미널에서 4명의 에이전트가 토론하는 과정을 실시간으로 볼 수 있습니다. 기획이 멈췄을 때 텍스트를 입력해 직접 개입(Intervention)해 보세요!
 
 ---
 
-## 에이전트 모드
+## 🎮 주요 인터페이스
 
-### Mock 모드 (기본값)
-
-외부 API 없이 즉시 동작합니다. 에이전트 간 메시지 교환과 협업 구조를 확인하는 데 사용합니다.
+### 1. 팀 협업용 Discord 봇 (Tutti)
+> 비개발 직군(기획자, PM)도 슬래시 커맨드로 에이전트 팀을 지휘할 수 있습니다.
 
 ```bash
-python -m orchestra.cli
+# .env에 DISCORD_BOT_TOKEN 입력 후 실행
+python -m orchestra.discord_bot
 ```
+- `/tutti start idea:우주 공룡 게임`: 기획 파이프라인 시작
+- **쓰레드 멘션 대화**: 생성된 전용 쓰레드에서 `@디자이너 장애물은 소행성으로 바꿔` 와 같이 개별 에이전트와 소통
+- **인게임 UI**: 환경 설정 모달, 승인/수정 버튼 등 직관적인 디스코드 UI 제공
+- 📖 [Tutti 디스코드 상세 가이드 보기](Tutti_Discord_Guide.md)
 
-### Ollama 모드
-
-로컬 LLM 서버를 연결하여 실제 AI가 게임을 기획합니다.
+### 2. 고급 터미널 제어 (CLI)
+> 개발자를 위한 강력한 명령줄 인터페이스입니다.
 
 ```bash
+# 사용자 개입 포함 강제 실행
+python -m orchestra.cli --idea "병합 퍼즐 게임" --intervention "라이브옵스 요소는 제외"
+
+# GitHub PR 자동 생성 연동
+python -m orchestra.cli --idea "우주 공룡 게임" --github-repo "owner/repo" --github-token "ghp_..."
+
+# Ollama를 활용한 완전 오프라인 로컬 LLM 구동
 python -m orchestra.cli --mode ollama
 ```
 
-`.env` 설정:
+---
 
-```
-AGENT_MODE=ollama
-OLLAMA_BASE_URL=http://localhost:11434
-DESIGNER_MODEL=qwen2.5-coder:7b-instruct
-REVIEWER_MODEL=qwen2.5-coder:7b-instruct
-CEO_MODEL=qwen3:8b
-SPEC_WRITER_MODEL=qwen2.5-coder:7b-instruct
-```
+## 📂 산출물 구조 (Artifacts)
 
-### API 모드
+기획 파이프라인이 종료되면 `artifacts/cli/playable/<run-name>/` 경로에 다음 파일들이 자동으로 생성됩니다. (Discord 봇은 Discord 전용 폴더에 생성)
 
-OpenAI, Google Gemini 등 클라우드 API를 사용합니다.
-
-```bash
-python -m orchestra.cli --mode api
-```
-
-`.env` 설정:
-
-```
-AGENT_MODE=api
-OPENAI_API_KEY=sk-...
-GOOGLE_API_KEY=AI...
-```
+| 파일명 | 설명 |
+| :--- | :--- |
+| `final_game_spec.md` | 최종 게임 기획 명세서 (마크다운) |
+| `game_schema.json` | 시스템 연동을 위한 구조화된 게임 데이터 스키마 |
+| `message_log.json` | 에이전트 및 사용자의 모든 발화/메시지 교환 로그 |
+| **`game/index.html`** | **즉시 플레이 가능한 프로토타입 게임 (클릭하여 실행)** |
 
 ---
 
-## 프로젝트 구조
+## 🛠️ 기술 스택 (Tech Stack)
 
-```
-orchestra/
-├── cli.py              # CLI 엔트리포인트
-├── discord_bot.py      # Discord 봇 (Tutti) - 슬래시 커맨드, UI, HitL
-├── discord.py          # Discord 어댑터 및 워크스페이스
-├── workflow.py         # 멀티 에이전트 워크플로우 오케스트레이션
-├── adapters.py         # LLM 프로바이더 어댑터 (Mock, Ollama, OpenAI, Google)
-├── config.py           # 에이전트 설정 로더
-├── models.py           # 데이터 모델
-├── pipeline.py         # 실행 계획 빌더
-├── prototype.py        # 플레이 가능한 HTML 게임 생성기
-├── github_pr.py        # GitHub PR 자동 생성 (urllib, 외부 의존성 0)
-├── knowledge.py        # 영구 지식 베이스 (Global/Project 규칙)
-├── presets.py          # 실행 프리셋 (fast_draft, balanced, deep_review)
-├── input_parser.py     # 사용자 입력 파서
-├── run_view.py         # 실행 상태 포맷터
-└── rules/              # 에이전트별 프롬프트 규칙
-    ├── shared.md
-    ├── designer.md
-    ├── reviewer.md
-    ├── ceo.md
-    └── spec_writer.md
-
-docs/
-├── design/         # 설계 및 아키텍처 문서
-├── guides/         # 실행 가이드 (Ollama, API 연동)
-├── operations/     # AI 활용 운영 문서와 요청 카탈로그
-└── agent-logs/     # 세션 로그 제출 안내 (원본 JSONL은 민감정보 제거 후 별도 제출)
-```
+- **Language:** Python 3.11+
+- **Agent Orchestration:** 자체 구현 Workflow Engine (의존성 최소화)
+- **Interface:** `discord.py` 2.3+ (Bot), `argparse` (CLI)
+- **LLM Support:** Mock (내장), Ollama (Local), OpenAI/Google Gemini (Cloud)
+- **CI/CD Mocking:** GitHub REST API (stdlib `urllib` 사용, 외부 라이브러리 Zero)
 
 ---
 
-## AI 코딩 에이전트 활용 기록
+## 🤖 에이전트 활용 선언
 
-이 프로젝트는 **AI 코딩 에이전트를 활용하여 개발**되었습니다.
+이 프로젝트는 개발 과정 전반에 걸쳐 **AI 코딩 에이전트(Codex, Gemini)**를 적극적으로 페어 프로그래머로 활용했습니다. 단순 코드 완성을 넘어 아키텍처 설계, 모듈 구현, 문서화에 이르기까지 AI와 인간의 협업으로 완성된 결과물입니다.
 
-| 도구                         | 활용 범위                                       |
-| :--------------------------- | :---------------------------------------------- |
-| **OpenAI Codex**             | 초기 아키텍처 설계, 모듈 구현, 코드 리뷰        |
-| **Gemini CLI (Antigravity)** | P0/P1 고도화, GitHub PR 연동, 문서 작성, 디버깅 |
+- 📖 [스킬 및 서브에이전트 사용 내역 보기](docs/design/skill-and-subagent-usage.md)
+- 📝 제출 관련 세션 로그 안내는 [SUBMISSION.md](SUBMISSION.md)를 참고하세요.
 
-세션 로그 원본은 토큰/로컬 경로 등 민감정보가 포함될 수 있어 public repo에는 그대로 커밋하지 않습니다. 제출 시에는 화면 녹화 또는 민감정보를 제거한 JSONL을 별도 첨부하는 방식을 권장합니다.
-세션 로그 제출 안내: [docs/agent-logs/README.md](docs/agent-logs/README.md)
-에이전트 활용 안내 문서: [docs/design/skill-and-subagent-usage.md](docs/design/skill-and-subagent-usage.md)
-
----
-
-## 테스트
-
-```bash
-python -m unittest discover -s tests
-```
-
-## 기술 스택
-
-- **Python 3.11+**
-- **discord.py 2.3+** — Discord 봇 및 슬래시 커맨드
-- **Ollama** — 로컬 LLM 추론 (선택)
-- **OpenAI / Google Gemini** — 클라우드 LLM (선택)
-- **GitHub REST API** — PR 자동 생성 (stdlib `urllib`, 외부 의존성 0)
-
-## 문서
-
-- [DESIGN.md](DESIGN.md) — 시스템 설계 문서
-- [Tutti_Discord_Guide.md](Tutti_Discord_Guide.md) — 디스코드 봇 사용 설명서
-- [Multi_Agent_Game_Design_Proposal.md](Multi_Agent_Game_Design_Proposal.md) — 초기 기술 제안서
-
-## 라이선스
-
-MIT
-
----
-
-## 📝 프로젝트 완성 후 발견한 것
-
-> 이 프로젝트를 완성하고 나서 알게 되었습니다.
-
-**[openai-oauth](https://github.com/EvanZhouDev/openai-oauth)**를 사용하면 ChatGPT Plus/Pro 구독자가 별도의 API 키 없이 OAuth 인증만으로 OpenAI 모델을 사용할 수 있습니다.
-
-현재 Tutti는 사용자가 직접 API 키를 발급받아 입력해야 하지만, 이 라이브러리를 적용하면:
-
-- ✅ API 키 발급 없이 ChatGPT 구독만으로 바로 사용
-- ✅ `/tutti apikey` 설정 단계 제거 → 온보딩 마찰 0
-- ✅ B2C 구독 서비스 모델로 전환 가능
-
-현재 구조(`adapters.py`의 Provider 패턴)는 신규 프로바이더를 쉽게 추가할 수 있도록 설계되어 있어, 향후 `OpenAIOAuthAdapter`를 추가하는 방향으로 확장할 수 있습니다.
+<div align="center">
+  <sub>Built with ❤️ and AI Agents.</sub>
+</div>
