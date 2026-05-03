@@ -16,6 +16,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.request import Request, urlopen
 from urllib.error import HTTPError
+import urllib.parse
 
 LOGGER = logging.getLogger(__name__)
 
@@ -37,6 +38,8 @@ def _gh_request(
     body: dict | None = None,
 ) -> dict:
     """GitHub REST API 호출 (urllib 기반)."""
+    # 한글 등 비-ASCII 문자가 포함된 경로 처리
+    path = urllib.parse.quote(path, safe="/?&=")
     url = f"{GITHUB_API}{path}" if path.startswith("/") else path
     data = json.dumps(body).encode("utf-8") if body else None
 

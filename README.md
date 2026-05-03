@@ -13,6 +13,7 @@
 | 제출 안내                            | [SUBMISSION.md](SUBMISSION.md)                                                     |
 | 에이전트 스킬/서브에이전트 사용 내역 | [docs/design/skill-and-subagent-usage.md](docs/design/skill-and-subagent-usage.md) |
 | Discord 사용 설명서                  | [Tutti_Discord_Guide.md](Tutti_Discord_Guide.md)                                   |
+| CLI 사용 설명서                      | [Tutti_CLI_Guide.md](Tutti_CLI_Guide.md)                                           |
 
 ---
 
@@ -108,6 +109,10 @@ python -m orchestra.cli
 ```
 
 mock 모드로 즉시 실행됩니다. 4명의 에이전트가 메시지를 교환하는 과정을 터미널에서 확인할 수 있습니다.
+
+💡 **개입 테스트 (Human-in-the-loop):**
+명령어를 실행하면 1차 기획이 끝난 후 터미널이 잠시 멈춥니다.
+이때 `> 장애물을 소행성 말고 외계인으로 바꿔줘` 처럼 텍스트를 치면 디스코드처럼 에이전트가 이를 반영(Revise)하여 2차 기획안을 만듭니다. (그냥 `Enter`를 치면 자동 승인됩니다.)
 
 **옵션:**
 
