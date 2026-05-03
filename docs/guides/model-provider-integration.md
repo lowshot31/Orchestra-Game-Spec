@@ -89,7 +89,7 @@ The current repository uses a mixed-provider default:
 - Designer -> `anthropic / claude-sonnet-4`
 - Reviewer -> `google / gemini-3.1-pro`
 - CEO -> `anthropic / claude-opus-4.7`
-- Spec Writer -> `openai / gpt-5.5`
+- Spec Writer -> `openai / gpt-5.4-mini`
 
 Important:
 

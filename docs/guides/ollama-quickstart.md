@@ -127,7 +127,7 @@ In `api` mode, the current defaults are:
 - Designer -> `anthropic / claude-sonnet-4`
 - Reviewer -> `google / gemini-3.1-pro`
 - CEO -> `anthropic / claude-opus-4.7`
-- Spec Writer -> `openai / gpt-5.5`
+- Spec Writer -> `openai / gpt-5.4-mini`
 
 This is defined in `orchestra/config.py`.
 
