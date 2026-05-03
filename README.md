@@ -40,29 +40,29 @@ graph TD
     classDef decision fill:#fff3e0,stroke:#ff9800,stroke-width:2px,color:#000;
     classDef system fill:#e8f5e9,stroke:#4caf50,stroke-width:2px,color:#000;
 
-    User((👤 사용자)):::user -->|1. 아이디어 입력\n/tutti start| Designer
+    User((👤 사용자)):::user -->|"1. 아이디어 입력 (/tutti start)"| Designer
     
     subgraph Agent Collaboration
-        Designer[🎨 Creative Designer\n기획 초안 작성]:::agent --> Reviewer[🛠️ Technical Reviewer\n기술/구현 리스크 검토]:::agent
-        Reviewer --> CEO[💼 Product CEO\n시장성 평가 및 Risk 판단]:::agent
+        Designer[🎨 Creative Designer 초안 작성]:::agent --> Reviewer[🛠️ Technical Reviewer 기술 검토]:::agent
+        Reviewer --> CEO[💼 Product CEO Risk 판단]:::agent
     end
     
     CEO --> Risk{⚡ Risk Level?}:::decision
     
     Risk -->|LOW| Auto[✅ 자동 승인]:::system
-    Risk -->|MEDIUM| Wait[⏳ 15초 대기 후 진행]:::system
+    Risk -->|MEDIUM| WaitNode[⏳ 15초 대기 후 진행]:::system
     Risk -->|HIGH| HitL[🛑 인간 개입 대기]:::user
     
-    HitL -->|수정 지시| Designer
-    Wait -->|수정 지시 (옵션)| Designer
+    HitL -->|"수정 지시"| Designer
+    WaitNode -->|"수정 지시 (옵션)"| Designer
     
     Auto --> Writer
-    Wait -.->|시간 초과| Writer
-    HitL -.->|승인 버튼| Writer
+    WaitNode -.->|"시간 초과"| Writer
+    HitL -.->|"승인 버튼"| Writer
     
     subgraph Automated Handoff
-        Writer[✍️ Spec Writer\n최종 명세/스키마 도출]:::agent --> Prototype[🎮 Prototype Generator\nHTML/JS 게임 생성]:::system
-        Prototype --> Github[🔗 GitHub PR\n브랜치 + 커밋 + PR 생성]:::system
+        Writer[✍️ Spec Writer 최종 명세 도출]:::agent --> Prototype[🎮 Prototype Generator 게임 생성]:::system
+        Prototype --> Github[🔗 GitHub PR 자동 생성]:::system
     end
 ```
 
