@@ -5,6 +5,25 @@
 
 ---
 
+## 평가자 빠른 확인
+
+| 항목 | 위치 |
+|:---|:---|
+| GitHub repo | https://github.com/lowshot31/Orchestra-Game-Spec |
+| 제출 안내 | [SUBMISSION.md](SUBMISSION.md) |
+| 에이전트 스킬/서브에이전트 사용 내역 | [docs/design/skill-and-subagent-usage.md](docs/design/skill-and-subagent-usage.md) |
+| Discord 사용 설명서 | [Tutti_Discord_Guide.md](Tutti_Discord_Guide.md) |
+
+API 키 없이 바로 확인하려면 아래 명령을 실행하면 됩니다.
+
+```bash
+python -m orchestra.cli --idea "한 손으로 하는 30초 리듬 게임" --intervention "모바일에서 바로 이해되게 단순하게" --run-name review-demo
+```
+
+결과는 `artifacts/cli/playable/review-demo/`에 저장되며, `message_log.json`에서 에이전트 간 메시지 교환을 확인할 수 있습니다.
+
+---
+
 ## 에이전트 파이프라인
 
 ```
@@ -229,10 +248,8 @@ orchestra/
 docs/
 ├── design/         # 설계 및 아키텍처 문서
 ├── guides/         # 실행 가이드 (Ollama, API 연동)
-└── agent-logs/     # AI 에이전트 개발 세션 로그
-    ├── *-codex-agent-session-history.jsonl
-    ├── *-codex-agent-session-audit.jsonl
-    └── *-project-session-history.jsonl
+├── operations/     # AI 활용 운영 문서와 요청 카탈로그
+└── agent-logs/     # 세션 로그 제출 안내 (원본 JSONL은 민감정보 제거 후 별도 제출)
 ```
 
 ---
@@ -246,7 +263,8 @@ docs/
 | **OpenAI Codex** | 초기 아키텍처 설계, 모듈 구현, 코드 리뷰 |
 | **Gemini CLI (Antigravity)** | P0/P1 고도화, GitHub PR 연동, 문서 작성, 디버깅 |
 
-세션 로그(`docs/agent-logs/`)는 토큰 보안 정책으로 인해 별도 제출합니다.
+세션 로그 원본은 토큰/로컬 경로 등 민감정보가 포함될 수 있어 public repo에는 그대로 커밋하지 않습니다. 제출 시에는 화면 녹화 또는 민감정보를 제거한 JSONL을 별도 첨부하는 방식을 권장합니다.
+세션 로그 제출 안내: [docs/agent-logs/README.md](docs/agent-logs/README.md)
 에이전트 활용 안내 문서: [docs/design/skill-and-subagent-usage.md](docs/design/skill-and-subagent-usage.md)
 
 ---

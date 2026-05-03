@@ -11,12 +11,16 @@ Orchestra는 두 층의 멀티에이전트 활용을 보여준다.
 
 이 문서는 평가자가 "개발 과정에서 어떤 스킬과 서브에이전트를 사용했는지" 빠르게 이해할 수 있도록 정리한 안내 문서다.
 
+공개 GitHub repo: https://github.com/lowshot31/Orchestra-Game-Spec
+
 원본 근거는 Codex 로컬 세션 로그다.
 
 ```text
 %USERPROFILE%\.codex\sessions
 %USERPROFILE%\.codex\session_index.jsonl
 ```
+
+원본 JSONL에는 시스템 프롬프트, 도구 호출, 로컬 경로, token 출력 가능성이 섞일 수 있으므로 public repo에는 그대로 올리지 않는다. 제출 시에는 화면 녹화 또는 민감정보 제거된 JSONL을 함께 제출하는 방식을 권장한다.
 
 ## 평가자가 보면 좋은 포인트
 
@@ -194,4 +198,3 @@ artifacts/cli/playable/review-demo/message_log.json
 - 제품 실행 과정에서는 Orchestra runtime agents가 실제로 메시지를 주고받으며 게임 기획 산출물을 만든다.
 
 따라서 이 문서는 "AI 코딩 에이전트를 활용해 개발했다"는 증거를 설명하고, 실행 산출물의 `message_log.json`은 "제품 안에서 에이전트들이 협업한다"는 증거를 보여준다.
-
