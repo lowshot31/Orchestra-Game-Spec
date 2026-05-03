@@ -63,6 +63,19 @@ Orchestra는 두 층의 멀티에이전트 활용을 보여준다.
 - `docs/operations/codex-request-catalog.md`
 - `docs/operations/weekly-operating-template.md`
 
+### Karpathy-inspired Agent Guidelines
+
+개발 과정에서 코딩 에이전트(Codex, Gemini)의 동작 원칙을 제어하기 위해 `docs/design/AGENTS.md`의 지침을 따르도록 설정했다.
+
+| 지침 (AGENTS.md) | 적용 방식 |
+| :--- | :--- |
+| **Think Before Coding** | 코드 작성 전 항상 `superpowers:brainstorming` 또는 `gstack` 스킬로 방향성 먼저 검증 |
+| **Simplicity First** | 오버엔지니어링(예: 초기부터 DB 연결, 복잡한 큐 시스템)을 배제하고 `mock` 기반의 단순 파이프라인으로 시작 |
+| **Surgical Changes** | 여러 파일을 동시에 엎지 않고, 리뷰어가 지적한 문제(예: 경로 오류, 안전망 구조)만 국소적으로 수정 |
+| **Goal-Driven Execution** | 모든 작업(예: Discord 봇 연동)을 "로컬에서 테스트 스크립트 먼저 동작"하는 구체적 목표 단위로 분할하여 실행 |
+
+이러한 명시적 지침을 통해 멀티 에이전트 시스템이라는 복잡한 과제를 길 잃지 않고 체계적으로 구현할 수 있었다.
+
 참고:
 
 스킬 사용은 항상 "실행 로그 한 줄"처럼 남지 않는다. 일부는 세션 중 언급, 일부는 도구 호출, 일부는 최종 문서에 반영된 형태로 남는다.
